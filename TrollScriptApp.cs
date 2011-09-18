@@ -4,9 +4,9 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace bfCompiler
+namespace tsCompiler
 {
-    public class BrainfuckApp : IDisposable
+    public class TrollScriptApp : IDisposable
     {
         public string Name { get; set; }
 
@@ -16,11 +16,11 @@ namespace bfCompiler
         private readonly MethodBuilder _methBuilder;
         private readonly ILGenerator _il;
 
-        public BrainfuckApp(string name)
+        public TrollScriptApp(string name)
         {
             Name = name;
-            _asBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName { Name = "Brainfuck app" }, AssemblyBuilderAccess.Save);
-            _modBuilder = _asBuilder.DefineDynamicModule("bf", name + ".exe");
+            _asBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName { Name = "Trollscript app" }, AssemblyBuilderAccess.Save);
+            _modBuilder = _asBuilder.DefineDynamicModule("ts", name + ".exe");
             _typeBuilder = _modBuilder.DefineType("Program", TypeAttributes.Public);
             _methBuilder = _typeBuilder.DefineMethod("Main", MethodAttributes.Public | MethodAttributes.Static);
             _asBuilder.SetEntryPoint(_methBuilder);
@@ -41,22 +41,25 @@ namespace bfCompiler
 
         public void BuildApp(string data)
         {
-            data = new string(data.Where(c => TokenBase.FromOp(c) != null).ToArray());
+            //TODO disabled
+           // data = new string(data.Where(c => TokenBase.FromOp(c) != null).ToArray());
 
             // Make a list of tuples, containing the token and
             // amount of repetitions
 
-            var ops = new List<Tuple<char, int>>();
+            var ops = new List<Tuple<string, int>>();
 
             while (!string.IsNullOrEmpty(data))
             {
-                char matchThis = data[0];
+                string matchThis = data.Substring(0,3);
 
-                var chars = data.TakeWhile(c => c == matchThis).ToArray();
+                //i need to match the pattern.
+
+                var chars = Take3While(data, matchThis);
 
                 data = data.Substring(chars.Length);
 
-                ops.Add(new Tuple<char, int>(matchThis, chars.Length));
+                ops.Add(new Tuple<string, int>(matchThis, chars.Length/3));
             }
 
             foreach (var pair in from t in ops where TokenBase.FromOp(t.Item1) != null select new { Token = TokenBase.FromOp(t.Item1), Count = t.Item2 })
@@ -66,6 +69,25 @@ namespace bfCompiler
 
             _il.Emit(OpCodes.Ret);
         }
+
+        private char[] Take3While(string data, string pattern)
+        {
+            string result ="";
+            if (data.Length < pattern.Length)
+                return new char[0];
+            if (data.Length % 3 != 0)
+                return new char[0];
+            for (var i=0; i<data.Length; i+=3 )
+            {
+                var trigraph = data.Substring(i, 3);
+                if (trigraph == pattern)
+                    result += pattern;
+                else
+                    break;
+            }
+            return result.ToArray();
+        }
+
 
         public void Dispose()
         {

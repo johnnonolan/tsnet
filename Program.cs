@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace bfCompiler
+namespace tsCompiler
 {
     class Program
     {
@@ -17,7 +17,7 @@ namespace bfCompiler
 
             string bfData = File.ReadAllText(fileName);
 
-            using (var app = new BrainfuckApp(Path.GetFileNameWithoutExtension(fileName)))
+            using (var app = new TrollScriptApp(Path.GetFileNameWithoutExtension(fileName)))
             {
                 app.BuildApp(bfData);
             }

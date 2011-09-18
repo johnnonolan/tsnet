@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Reflection.Emit;
 
-namespace bfCompiler
+namespace tsCompiler
 {
-    [Token(Op = '>')]
+//[Token(Op = ">")]
+    [Token(Op = "ooo")]
     public class IdxInc : TokenBase
     {
         public override void Emit(ILGenerator il, int amount = 1)
@@ -16,7 +17,7 @@ namespace bfCompiler
         }
     }
 
-    [Token(Op = '<')]
+    [Token(Op = "ool")]
     public class IdxDec : TokenBase
     {
         public override void Emit(ILGenerator il, int amount = 1)
@@ -28,7 +29,7 @@ namespace bfCompiler
         }
     }
 
-    [Token(Op = '+')]
+    [Token(Op = "olo")]
     public class DataInc : TokenBase
     {
         public override void Emit(ILGenerator il, int amount = 1)
@@ -44,7 +45,7 @@ namespace bfCompiler
         }
     }
 
-    [Token(Op = '-')]
+    [Token(Op = "oll")]
     public class DataDec : TokenBase
     {
         public override void Emit(ILGenerator il, int amount = 1)
@@ -60,7 +61,7 @@ namespace bfCompiler
         }
     }
 
-    [Token(Op = '.')]
+    [Token(Op = "loo")]
     public class Spit : TokenBase
     {
         public override void Emit(ILGenerator il, int amount = 1)
@@ -81,7 +82,7 @@ namespace bfCompiler
         }
     }
 
-    [Token(Op = ',')]
+    [Token(Op = "lol")]
     public class Swallow : TokenBase
     {
         public override void Emit(ILGenerator il, int amount = 1)
@@ -104,7 +105,7 @@ namespace bfCompiler
         protected static Stack<Label> StartWhileLabels = new Stack<Label>();
     }
 
-    [Token(Op = '[')]
+    [Token(Op = "llo")]
     public class StartLoop : LoopBase
     {
         public override void Emit(ILGenerator il, int amount = 1)
@@ -123,7 +124,7 @@ namespace bfCompiler
         }
     }
 
-    [Token(Op = ']')]
+    [Token(Op = "lll")]
     public class EndLoop : LoopBase
     {
         public override void Emit(ILGenerator il, int amount = 1)

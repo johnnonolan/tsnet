@@ -4,18 +4,18 @@ using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace bfCompiler
+namespace tsCompiler
 {
     public abstract class TokenBase
     {
-        private char? _op;
+        private string _op;
 
-        public char Op
+        public string Op
         {
-            get { return (char)(_op ?? (_op = GetType().GetCustomAttributes(false).OfType<TokenAttribute>().Single().Op)); }
+            get { return (string)(_op ?? (_op = GetType().GetCustomAttributes(false).OfType<TokenAttribute>().Single().Op)); }
         }
 
-        private static readonly Dictionary<char, Func<TokenBase>> TokenList;
+        private static readonly Dictionary<string, Func<TokenBase>> TokenList;
 
         public abstract void Emit(ILGenerator il, int amount=1);
 
@@ -32,7 +32,7 @@ namespace bfCompiler
                     t => (Func<TokenBase>) (() => (TokenBase) Activator.CreateInstance(t)));
         }
 
-        public static TokenBase FromOp(char op)
+        public static TokenBase FromOp(string op)
         {
             return !TokenList.ContainsKey(op) ? null : TokenList[op]();
         }
@@ -43,6 +43,6 @@ namespace bfCompiler
     [AttributeUsage(AttributeTargets.Class)]
     public class TokenAttribute : Attribute
     {
-        public char Op { get; set; }
+        public string Op { get; set; }
     }
 }
